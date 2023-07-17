@@ -1,7 +1,7 @@
 # import os
 
 from datetime import date
-import sys
+import sys, os
 
 
 # transacoes = dict()
@@ -9,13 +9,10 @@ import sys
 selected_option = -1
 account_balance = 0
 statement = ""
+count_loot = 0
 
-
-saldo = 0
-limite = 500
-LIMITE_SAQUES = 3
-qtd_saques = 0
-extrato = ""
+LOOT_LIMIT = 500
+NUMBER_LOOT = 3
 
 
 #######################################################
@@ -24,6 +21,8 @@ extrato = ""
 
 
 def print_main_menu():
+    os.system("cls")
+
     print(
         """
 ------------------------------------------
@@ -42,6 +41,9 @@ def print_main_menu():
 
 
 #########################################################
+
+
+#########################################################
 #   MENU AUXILIAR
 #########################################################
 
@@ -50,7 +52,8 @@ def aux_menu():
     while True:
         print(
             """\n------------------------------------------\n
-    [0] - Voltar ao Menu Principal\n    [9] - Sair\n"""
+    [0] - Voltar ao Menu Principal\n    [9] - Sair\n
+------------------------------------------\n"""
         )
 
         selected_option = input("   Selecione a opção desejada: ")
@@ -74,9 +77,9 @@ def aux_menu():
 #########################################################
 
 
-def repeat_operation():
+def repeat_operation(operation):
     while True:
-        selected_option = input("    Deseja fazer outro depósito? [S/N] ")
+        selected_option = input(f"    Deseja fazer outro {operation}? [S/N] ")
 
         if selected_option.upper() == "N":
             return False
@@ -93,8 +96,32 @@ def repeat_operation():
 
 
 #########################################################
+#   TESTE DE ENTRADA
+#########################################################
+
+
+def input_test(str_input):
+    if len(str_input) >= 4:
+        # print("tamanho maior ou igual a 4")
+        if str_input[-3] == "." or str_input[-3] == ",":
+            # print("tem ponto ou virgula de centavos")
+            str_aux = str_input.replace(".", "").replace(",", "")
+
+            if str_aux.isnumeric() and float(str_aux) > 0:
+                # print("é número maior que 0")
+                return float(str_aux) / 100
+
+    return 0
+
+
+#########################################################
+
+
+#########################################################
 #   0 - DEPÓSITO
 #########################################################
+
+
 def deposit_value():
     global account_balance, statement
 
@@ -106,31 +133,27 @@ def deposit_value():
     )
 
     while True:
-        value = input("    Valor do depósito: R$ ")
+        print("\n    - formato R$ 00.00")
 
-        NOW = date.today()
-        account_balance += int(value)
+        str_value = input("\n    Valor do depósito: R$ ")
 
-        statement += f"  {NOW}     Depósito        R$ {value},00\n"
+        value = input_test(str_value)
 
-        print("    Depósito realizado com sucesso!\n")
+        if value == 0:
+            print("\n    O valor é inválido!")
+            continue
 
-        if not repeat_operation():
-            aux_menu()
-            break
+        else:
+            NOW = date.today()
+            account_balance += value
 
-        # selected_option = input("    Deseja fazer outro depósito? [S/N] ")
+            statement += f"  {NOW}     Depósito      R$ {value:,.2f}\n"
 
-        # if selected_option.upper() == "N":
-        #     aux_menu()
-        #     break
+            print("    Depósito realizado com sucesso!\n")
 
-        # elif selected_option.upper() == "S":
-        #     print(" ")
-        #     continue
-        # else:
-        #     print("\n   Opção inválida!")
-        #     continue
+            if not repeat_operation("depósito"):
+                aux_menu()
+                break
 
 
 #########################################################
@@ -142,7 +165,7 @@ def deposit_value():
 
 
 def take_value():
-    global account_balance, statement
+    global account_balance, statement, NUMBER_LOOT, count_loot, LOOT_LIMIT
 
     print(
         """
@@ -152,20 +175,54 @@ def take_value():
     )
 
     while True:
-        value = int(input("    Valor do saque: R$ "))
+        if count_loot >= NUMBER_LOOT:
+            print("\n    Saque não permitido!\n")
+            print(
+                """    Você já atingiu sua quantidade
+    de saques disponíveis!"""
+            )
+            aux_menu()
+            break
 
-        NOW = date.today()
+        str_value = input("    Valor do saque: R$ ")
 
-        if account_balance >= value:
-            account_balance -= value
+        value = input_test(str_value)
 
-            statement += f"  {NOW}     Saque         - R$ {value},00\n"
+        if value == 0:
+            print("\n    O valor é inválido!")
+            continue
 
-            print("\n    Saque realizado com sucesso!\n\n")
+        else:
+            #         if count_loot >= NUMBER_LOOT:
+            #             print("\n    Saque não permitido!\n")
+            #             print(
+            #                 """    Você já atingiu sua quantidade
+            # de saques disponíveis!"""
+            #             )
 
-            if not repeat_operation():
+            #             aux_menu()
+            #             break
+
+            if account_balance < value:
+                print("\n    Saldo insuficiente!\n\n")
                 aux_menu()
                 break
+
+            elif value > LOOT_LIMIT:
+                print("\n    Saque não permitido!\n")
+                print(f"    Seu limite de saque é R${LOOT_LIMIT},00!\n\n")
+
+            else:
+                NOW = date.today()
+                account_balance -= value
+                count_loot += 1
+                statement += f"  {NOW}     Saque       - R$ {value:,.2f}\n"
+
+                print("\n    Saque realizado com sucesso!\n\n")
+
+                if not repeat_operation("saque"):
+                    aux_menu()
+                    break
 
 
 #########################################################
@@ -174,6 +231,8 @@ def take_value():
 #########################################################
 #   2 - EXTRATO
 #########################################################
+
+
 def print_statement():
     global statement, account_balance
 
@@ -184,12 +243,15 @@ def print_statement():
 ------------------------------------------\n"""
     )
 
-    print(statement)
+    if statement == "":
+        print("\n\n    Não foram realizadas movimentações\n\n")
+    else:
+        print(statement)
 
     print(
         f"""
 ------------------------------------------
-Saldo = R$ {account_balance},00
+Saldo = R$ {account_balance:,.2f}
 ------------------------------------------"""
     )
 
@@ -202,6 +264,8 @@ Saldo = R$ {account_balance},00
 #########################################################
 #   9 - SAIR DO PROGRAMA
 #########################################################
+
+
 def exit_program():
     print(
         """
@@ -209,7 +273,7 @@ def exit_program():
 ------------------------------------------
         Obrigado! Volte sempre!                  
 ------------------------------------------
-------------------------------------------"""
+------------------------------------------\n\n\n\n"""
     )
     sys.exit()
 
@@ -245,7 +309,6 @@ while True:
 
     else:
         print("\n   Opção inválida!")
-        selected_option = input("   Selecione a opção desejada: ")
 
 
 #########################################################
