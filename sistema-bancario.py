@@ -1,6 +1,6 @@
 # import os
 
-from datetime import date
+from datetime import datetime
 import sys, os
 
 
@@ -144,10 +144,12 @@ def deposit_value():
             continue
 
         else:
-            NOW = date.today()
+            NOW = datetime.now()
+            strNOW = NOW.strftime("%d/%m/%y %H:%M")
+
             account_balance += value
 
-            statement += f"  {NOW}     Depósito      R$ {value:,.2f}\n"
+            statement += f"{strNOW}    Depósito     R$ {value:,.2f}\n"
 
             print("    Depósito realizado com sucesso!\n")
 
@@ -213,10 +215,12 @@ def take_value():
                 print(f"    Seu limite de saque é R${LOOT_LIMIT},00!\n\n")
 
             else:
-                NOW = date.today()
+                NOW = datetime.today()
+                strNOW = NOW.strftime("%d/%m/%y %H:%M")
+
                 account_balance -= value
                 count_loot += 1
-                statement += f"  {NOW}     Saque       - R$ {value:,.2f}\n"
+                statement += f"{strNOW}    Saque      - R$ {value:,.2f}\n"
 
                 print("\n    Saque realizado com sucesso!\n\n")
 
