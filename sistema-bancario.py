@@ -127,11 +127,11 @@ def atendimento_cliente(clientes, contas, cpf_cliente=""):
     if opcaoSelecionada == "1":
         print("\n>>> Criar conta corrente!\n")
 
-        # criar_conta_corrente(clientes, contas, cpf_cliente)
+        criar_conta_corrente(clientes, contas, cpf_cliente)
     elif opcaoSelecionada == "2":
         print("\n>>> Listar contas!\n")
 
-        # listar_contas(contas, cpf_cliente)
+        listar_contas(contas, cpf_cliente)
     elif opcaoSelecionada == "3":
         print("\n>>> Depositar!\n")
         depositar(clientes, contas, cpf_cliente=cpf_cliente)
@@ -177,11 +177,11 @@ def atendimento_sem_cadastro(clientes, contas):
 
     if opcaoSelecionada == "1":
         print("\n>>> Listar clientes!")
-        # listar_clientes(clientes)
+        listar_clientes(clientes)
         menu_rodape(clientes, contas, atendimento_sem_cadastro, True)
     elif opcaoSelecionada == "2":
         print("\n>>> Listar Contas")
-        # listar_contas(contas)
+        listar_contas(contas)
         menu_rodape(clientes, contas, atendimento_sem_cadastro, True)
     elif opcaoSelecionada == "3":
         print("\n>>> Depositar!\n")
@@ -255,6 +255,96 @@ def buscar_cliente(clientes, chave, valor):
         if cliente[chave] == valor:
             return clientes.index(cliente)
     return -1
+
+
+def buscar_conta(contas, chave, valor):
+    for conta in contas:
+        if conta[chave] == valor:
+            return contas.index(conta)
+    return -1
+
+
+def buscar_lista_contas(contas, cpf_cliente):
+    contas_cliente = []
+
+    for conta in contas:
+        if conta["cpf_dono"] == cpf_cliente:
+            contas_cliente.append(contas.index(conta))
+
+    return contas_cliente
+
+
+def criar_conta_corrente(usuarios, contas, cpf_cliente):
+    print(
+        """
+--------------------------------------------
+>>> Criar Conta Corrente
+--------------------------------------------"""
+    )
+
+    resposta = input("Tem certeza que deseja\nabrir uma conta corrente? (S/N)")
+
+    if resposta.upper() == "N":
+        menu_rodape(usuarios, contas, atendimento_cliente)
+
+    elif resposta.upper() == "S":
+        nova_conta = {
+            "agencia": "0001",
+            "numero_conta": len(contas) + 1,
+            "cpf_dono": cpf_cliente,
+            "LIMITE_SAQUE": 500.00,
+            "SAQUES_DISPONIVEIS": 3,
+            "cont_saques": 0,
+            "saldo": 0,
+            "extrato": "",
+        }
+
+        contas.append(nova_conta)
+
+        print("\n>>> Conta criada com sucesso!\n\n")
+        listar_contas(contas, cpf_cliente)
+
+    else:
+        input("\n!!! Opção Inválida.\nPressione qualquer tecla para continuar...\n")
+        criar_conta_corrente(usuarios, contas, cpf_cliente)
+
+
+def listar_clientes(usuarios, cpf_cliente=-1):
+    for cliente in usuarios:
+        if cpf_cliente == -1:
+            # print(conta)
+            print(f"\n\nNome: {cliente['nome']}")
+            print(f"Data de Nascimento: {cliente['data_de_nascimento']}")
+            print(f"CPF: {cliente['cpf']}")
+            print(f"Endereço: {cliente['endereco']}")
+
+        elif cliente["cpf_dono"] == cpf_cliente:
+            # print(conta)
+            print(f"\n\nNome: cliente['nome']")
+            print(f"Data de Nascimento: {cliente['data_de_nascimento']}")
+            print(f"CPF: {cliente['cpf']}")
+            print(f"Endereço: {cliente['endereco']}")
+
+
+def listar_contas(contas, cpfCliente=-1):
+    for conta in contas:
+        if cpfCliente == -1:
+            # print(conta)
+            print("\n\nAgência: " + conta["agencia"])
+            print(f"Conta Corrente: {'%04d'%conta['numero_conta']}")
+            print("Proprietário (CPF): " + conta["cpf_dono"])
+            print(f"Limite por Saque (R$): {conta['LIMITE_SAQUE']:.2f}")
+            print(f"Saques disponíveis: {conta['SAQUES_DISPONIVEIS']}")
+            print(f"Saques realizados: {conta['cont_saques']}")
+
+        elif conta["cpf_dono"] == cpfCliente:
+            # print(conta)
+            print("\n\nAgência: " + conta["agencia"])
+            print(f"Conta Corrente: {'%04d'%conta['numero_conta']}")
+            print("Proprietário (CPF): " + conta["cpf_dono"])
+            print(f"Limite por Saque (R$): {conta['LIMITE_SAQUE']:.2f}")
+            print(f"Saques disponíveis: {conta['SAQUES_DISPONIVEIS']}")
+            print(f"Saques realizados: {conta['cont_saques']}")
 
 
 def repetir_operacao(operation):
