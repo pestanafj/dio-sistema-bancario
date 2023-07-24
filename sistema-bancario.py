@@ -347,21 +347,6 @@ def listar_contas(contas, cpfCliente=-1):
             print(f"Saques realizados: {conta['cont_saques']}")
 
 
-def repetir_operacao(operation):
-    while True:
-        selected_option = input(f"    Deseja fazer outro {operation}? [S/N] ")
-
-        if selected_option.upper() == "N":
-            return False
-
-        elif selected_option.upper() == "S":
-            print(" ")
-            return True
-        else:
-            print("\n    Opção inválida!!!!\n")
-            continue
-
-
 def testar_entrada(str_input):
     if len(str_input) >= 4:
         # print("tamanho maior ou igual a 4")
@@ -376,40 +361,65 @@ def testar_entrada(str_input):
     return 0
 
 
-def depositar():
-    global saldo, extrato
-
+def depositar(usuarios, contas, /, *, cpf_cliente=""):
     print(
         """
-------------------------------------------
-                DEPÓSITO                  
-------------------------------------------"""
+--------------------------------------------
+>>> Depósito
+--------------------------------------------"""
     )
-
-    while True:
+    if cpf_cliente == "":
+        print("\n    Agência: 0001")
+        conta_corrente = input("    Conta corrente: ")
         print("\n    - formato R$ 00.00")
 
         str_valor = input("\n    Valor do depósito: R$ ")
 
         valor = testar_entrada(str_valor)
 
+        index_conta = buscar_conta(contas, "numero_conta", int(conta_corrente))
+
+        if index_conta == -1:
+            print("\n!!! Conta corrente não encontrada!")
+            menu_rodape(usuarios, contas, depositar, True)
+
         if valor == 0:
-            print("\n    O valor é inválido!")
-            continue
+            print("\n!!! O valor é inválido!")
+            depositar(usuarios, contas)
 
         else:
             NOW = datetime.now()
             strNOW = NOW.strftime("%d/%m/%y %H:%M")
 
-            saldo += valor
+            contas[index_conta]["saldo"] += valor
+            contas[index_conta][
+                "extrato"
+            ] += f"{strNOW}    Depósito     R$ {valor:,.2f}\n"
 
-            extrato += f"{strNOW}    Depósito     R$ {valor:,.2f}\n"
+            print("\n>>> Depósito realizado com sucesso!\n")
+    else:
+        contas_cliente = buscar_lista_contas(contas, cpf_cliente)
+        if len(contas_cliente) <= 0:
+            print("\n!!! Nenhuma conta corrente encontrada!")
+            menu_rodape(usuarios, contas, depositar, True)
+        else:
+            for index in contas_cliente:
+                print(
+                    f"\n[{index}] - Agência: {contas[index]['agencia']}\n            Conta: {contas[index]['numero_conta']}"
+                )
+            opcao = input("\nSelecione a conta em \nque deseja realizar o depósito!")
 
-            print("    Depósito realizado com sucesso!\n")
+            NOW = datetime.now()
+            strNOW = NOW.strftime("%d/%m/%y %H:%M")
 
-            if not repetir_operacao("depósito"):
-                menu_rodape()
-                break
+            contas[opcao]["saldo"] += valor
+            contas[opcao]["extrato"] += f"{strNOW}    Depósito     R$ {valor:,.2f}\n"
+
+            print("\n>>> Depósito realizado com sucesso!\n")
+
+    menu_rodape(usuarios, contas, depositar, True)
+
+    return usuarios, contas
 
 
 def sacar():
