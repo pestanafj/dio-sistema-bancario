@@ -29,7 +29,7 @@ def menu_principal(clientes, contas):
         atendimento_cliente(clientes, contas)
     elif opcaoSelecionada == "2":
         print("\n>>> Desejo ser cliente!!\n")
-        # cadastrar_cliente(clientes, contas)
+        cadastrar_cliente(clientes, contas)
     elif opcaoSelecionada == "3":
         atendimento_sem_cadastro(clientes, contas)
     elif opcaoSelecionada == "9":
@@ -199,6 +199,62 @@ def atendimento_sem_cadastro(clientes, contas):
         atendimento_sem_cadastro(clientes, contas)
 
     menu_rodape(clientes, contas, atendimento_sem_cadastro, True)
+
+
+def cadastrar_cliente(clientes, contas):
+    print(
+        """
+--------------------------------------------
+>>> Cadastrar Cliente
+--------------------------------------------"""
+    )
+
+    nome = input("Nome Completo: ")
+    data_de_nascimento = input("Data de Nascimento(dd/mm/aaaa): ")
+    cpf = input("CPF:")
+    print("Endereço:")
+    logradouro = input("Logradouro/rua: ")
+    numero_casa = input("Nº: ")
+    bairro = input("Bairro: ")
+    cidade = input("Cidade: ")
+    estado = input("Estado(XX): ")
+
+    endereco = f"{logradouro}, {numero_casa} - {bairro} - {cidade}/{estado}"
+
+    cpf_tratado = ""
+    for digito in cpf:
+        if digito >= "0" and digito <= "9":
+            cpf_tratado += digito
+
+    print(cpf_tratado)
+
+    if len(cpf_tratado) != 11:
+        print("\n!!! Erro!\n!!! CPF inválido!\n")
+
+    elif buscar_cliente(clientes, "cpf", cpf_tratado) != -1:
+        print("\n!!! Erro!\n!!! Já existe um cadastro para esse CPF!\n")
+
+    else:
+        novo_cliente = {
+            "nome": nome,
+            "data_de_nascimento": data_de_nascimento,
+            "cpf": cpf_tratado,
+            "endereco": endereco,
+        }
+
+        clientes.append(novo_cliente)
+        print("\n\n>>> Cliente cadastrado!")
+
+    menu_rodape(clientes, contas, cadastrar_cliente, True)
+
+    return clientes, contas
+
+
+def buscar_cliente(clientes, chave, valor):
+    for cliente in clientes:
+        if cliente[chave] == valor:
+            return clientes.index(cliente)
+    return -1
 
 
 def repetir_operacao(operation):
