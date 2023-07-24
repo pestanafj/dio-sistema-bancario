@@ -4,45 +4,201 @@ from datetime import datetime
 import sys, os
 
 
-def menu_principal(usuarios):
+def menu_principal(clientes, contas):
+    os.system("cls")
+
+    print(
+        """ 
+--------------------------------------------
+                PESTANA BANK
+--------------------------------------------
+
+[1] - Já sou cliente
+[2] - Desejo ser cliente
+[3] - Atendimento sem cadastro
+[9] - Finalizar atendimento
+
+--------------------------------------------
+    """
+    )
+
+    opcaoSelecionada = input("Selecione a opção desejada: ")
+
+    if opcaoSelecionada == "1":
+        print("\n>>> Já sou cliente!\n")
+        atendimento_cliente(clientes, contas)
+    elif opcaoSelecionada == "2":
+        print("\n>>> Desejo ser cliente!!\n")
+        # cadastrar_cliente(clientes, contas)
+    elif opcaoSelecionada == "3":
+        atendimento_sem_cadastro(clientes, contas)
+    elif opcaoSelecionada == "9":
+        sair_do_programa()
+    else:
+        input("\n!!! Opção Inválida.\nPressione qualquer tecla para continuar...\n")
+        menu_principal(clientes, contas)
+
+    return clientes, contas
+
+
+def menu_rodape(clientes, contas, menu_de_chamada, outra_operacao=False):
+    str_operacao = ""
+    if outra_operacao:
+        str_operacao = "\n[#] - Fazer outra operação"
+
+    print(
+        f"""
+\n------------------------------------------{str_operacao}
+[0] - Voltar ao Início
+[9] - Sair\n
+------------------------------------------\n"""
+    )
+
+    opcao_selecionada = input("Selecione a opção desejada: ")
+
+    if opcao_selecionada == "9":
+        sair_do_programa()
+
+    elif opcao_selecionada == "0":
+        menu_principal(clientes, contas)
+
+    elif opcao_selecionada == "#":
+        menu_de_chamada(clientes, contas)
+
+    # elif opcao_selecionada == "*":
+    #     menu_anterior(clientes, contas)
+
+    else:
+        print("\n!!! Opção inválida!")
+        menu_rodape(clientes, contas, menu_de_chamada, outra_operacao)
+
+    return clientes, contas
+
+
+def atendimento_cliente(clientes, contas, cpf_cliente=""):
     os.system("cls")
 
     print(
         """
-------------------------------------------
-                  MENU                  
-------------------------------------------
-
-    [0] - Depósito
-    [1] - Saque
-    [2] - Extrato
-    [9] - Sair
-
-------------------------------------------
-------------------------------------------
-        """
+--------------------------------------------
+           PESTANA BANK - CLIENTE           
+--------------------------------------------"""
     )
 
+    # if cpf_cliente == "":
+    cpf = input("Digite o CPF: ")
 
-def menu_rodape():
-    while True:
-        print(
-            """\n------------------------------------------\n
-    [0] - Voltar ao Menu Principal\n    [9] - Sair\n
-------------------------------------------\n"""
-        )
+    for digito in cpf:
+        if digito >= "0" and digito <= "9":
+            cpf_cliente += digito
 
-        selected_option = input("   Selecione a opção desejada: ")
+    if len(cpf_cliente) != 11:
+        print("\n!!! Erro!\n!!! CPF inválido!\n")
+        menu_rodape(clientes, contas, atendimento_cliente, True)
 
-        if selected_option == "9":
-            sair_do_programa()
+    index_cliente = buscar_cliente(clientes, "cpf", cpf_cliente)
 
-        elif selected_option == "0":
-            break
+    if index_cliente == -1:
+        print("\n!!! Erro!\n!!! Não existe cliente cadastrado com esse CPF!\n")
+        menu_rodape(clientes, contas, atendimento_cliente, True)
 
-        else:
-            print("\n   Opção inválida!")
-            continue
+    cliente = clientes[index_cliente]
+    nome_cliente = cliente["nome"]
+
+    print(f"\n\n>>> Bem vindo {nome_cliente}!")
+
+    print(
+        """
+
+[1] - Criar Conta
+[2] - Listar Contas
+[3] - Depósito
+[4] - Saque
+[5] - Extrato
+[0] - Voltar ao Menu Anterior
+[9] - Finalizar atendimento
+
+--------------------------------------------
+"""
+    )
+
+    opcaoSelecionada = input("Selecione a opção desejada: ")
+
+    if opcaoSelecionada == "1":
+        print("\n>>> Criar conta corrente!\n")
+
+        # criar_conta_corrente(clientes, contas, cpf_cliente)
+    elif opcaoSelecionada == "2":
+        print("\n>>> Listar contas!\n")
+
+        # listar_contas(contas, cpf_cliente)
+    elif opcaoSelecionada == "3":
+        print("\n>>> Depositar!\n")
+        depositar(clientes, contas, cpf_cliente=cpf_cliente)
+    elif opcaoSelecionada == "4":
+        print("\n>>> Saque\n")
+    elif opcaoSelecionada == "5":
+        print("\n>>> Imprimir extrato\n")
+        # imprimir_extrato(clientes, contas)
+    elif opcaoSelecionada == "0":
+        menu_principal(clientes, contas)
+    elif opcaoSelecionada == "9":
+        sair_do_programa()
+    else:
+        input("\n!!! Opção Inválida.\nPressione qualquer tecla para continuar...\n")
+        atendimento_cliente(clientes, contas)
+
+    menu_rodape(clientes, contas, atendimento_cliente, True)
+
+    return clientes, contas
+
+
+def atendimento_sem_cadastro(clientes, contas):
+    os.system("cls")
+
+    print(
+        """
+--------------------------------------------
+  PESTANA BANK - ATENDIMENTO SEM CADASTRO           
+--------------------------------------------
+
+[1] - Listar Clientes
+[2] - Listar Contas
+[3] - Depósito
+[4] - Extrato
+[0] - Voltar ao Menu Principal
+[9] - Finalizar o Atendimento
+
+--------------------------------------------
+"""
+    )
+
+    opcaoSelecionada = input("Selecione a opção desejada: ")
+
+    if opcaoSelecionada == "1":
+        print("\n>>> Listar clientes!")
+        # listar_clientes(clientes)
+        menu_rodape(clientes, contas, atendimento_sem_cadastro, True)
+    elif opcaoSelecionada == "2":
+        print("\n>>> Listar Contas")
+        # listar_contas(contas)
+        menu_rodape(clientes, contas, atendimento_sem_cadastro, True)
+    elif opcaoSelecionada == "3":
+        print("\n>>> Depositar!\n")
+
+        # depositar(clientes, contas, "")
+    elif opcaoSelecionada == "4":
+        print("\n>>> Imprimir extrato\n")
+        # imprimir_extrato(clientes, contas)
+    elif opcaoSelecionada == "0":
+        menu_principal(clientes, contas)
+    elif opcaoSelecionada == "9":
+        sair_do_programa()
+    else:
+        input("\n!!! Opção Inválida.\nPressione qualquer tecla para continuar...\n")
+        atendimento_sem_cadastro(clientes, contas)
+
+    menu_rodape(clientes, contas, atendimento_sem_cadastro, True)
 
 
 def repetir_operacao(operation):
@@ -209,7 +365,8 @@ def sair_do_programa():
 
 
 def main():
-    usuarios = list()
+    clientes = list()
+    contas = list()
 
     nome = "Fernanda Pestana"
     data_de_nascimento = "15/10/1988"
@@ -222,7 +379,7 @@ def main():
 
     endereco = f"{logradouro}, {numero_casa} - {bairro} - {cidade}/{estado}"
 
-    novo_usuario = {
+    novo_cliente = {
         "nome": nome,
         "data_de_nascimento": data_de_nascimento,
         "cpf": cpf,
@@ -243,10 +400,11 @@ def main():
 
     nova_conta["saldo"] = 100
 
-    usuarios.append(novo_usuario)
-    usuarios[0]["contas"].append(nova_conta)
+    clientes.append(novo_cliente)
+    clientes[0]["contas"].append(nova_conta)
+    contas.append(nova_conta)
 
-    menu_principal(usuarios)
+    menu_principal(clientes, contas)
 
 
 main()
