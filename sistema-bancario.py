@@ -4,23 +4,7 @@ from datetime import datetime
 import sys, os
 
 
-# transacoes = dict()
-
-selected_option = -1
-account_balance = 0
-statement = ""
-count_loot = 0
-
-LOOT_LIMIT = 500
-NUMBER_LOOT = 3
-
-
-#######################################################
-#    MENU PRINCIPAL
-#######################################################
-
-
-def print_main_menu():
+def menu_principal(usuarios):
     os.system("cls")
 
     print(
@@ -40,15 +24,7 @@ def print_main_menu():
     )
 
 
-#########################################################
-
-
-#########################################################
-#   MENU AUXILIAR
-#########################################################
-
-
-def aux_menu():
+def menu_rodape():
     while True:
         print(
             """\n------------------------------------------\n
@@ -59,7 +35,7 @@ def aux_menu():
         selected_option = input("   Selecione a opção desejada: ")
 
         if selected_option == "9":
-            exit_program()
+            sair_do_programa()
 
         elif selected_option == "0":
             break
@@ -69,15 +45,7 @@ def aux_menu():
             continue
 
 
-#########################################################
-
-
-#########################################################
-#   REPETIR OPERACAO
-#########################################################
-
-
-def repeat_operation(operation):
+def repetir_operacao(operation):
     while True:
         selected_option = input(f"    Deseja fazer outro {operation}? [S/N] ")
 
@@ -92,15 +60,7 @@ def repeat_operation(operation):
             continue
 
 
-#########################################################
-
-
-#########################################################
-#   TESTE DE ENTRADA
-#########################################################
-
-
-def input_test(str_input):
+def testar_entrada(str_input):
     if len(str_input) >= 4:
         # print("tamanho maior ou igual a 4")
         if str_input[-3] == "." or str_input[-3] == ",":
@@ -114,16 +74,8 @@ def input_test(str_input):
     return 0
 
 
-#########################################################
-
-
-#########################################################
-#   0 - DEPÓSITO
-#########################################################
-
-
-def deposit_value():
-    global account_balance, statement
+def depositar():
+    global saldo, extrato
 
     print(
         """
@@ -135,11 +87,11 @@ def deposit_value():
     while True:
         print("\n    - formato R$ 00.00")
 
-        str_value = input("\n    Valor do depósito: R$ ")
+        str_valor = input("\n    Valor do depósito: R$ ")
 
-        value = input_test(str_value)
+        valor = testar_entrada(str_valor)
 
-        if value == 0:
+        if valor == 0:
             print("\n    O valor é inválido!")
             continue
 
@@ -147,27 +99,19 @@ def deposit_value():
             NOW = datetime.now()
             strNOW = NOW.strftime("%d/%m/%y %H:%M")
 
-            account_balance += value
+            saldo += valor
 
-            statement += f"{strNOW}    Depósito     R$ {value:,.2f}\n"
+            extrato += f"{strNOW}    Depósito     R$ {valor:,.2f}\n"
 
             print("    Depósito realizado com sucesso!\n")
 
-            if not repeat_operation("depósito"):
-                aux_menu()
+            if not repetir_operacao("depósito"):
+                menu_rodape()
                 break
 
 
-#########################################################
-
-
-#########################################################
-#   1 - SAQUE
-#########################################################
-
-
-def take_value():
-    global account_balance, statement, NUMBER_LOOT, count_loot, LOOT_LIMIT
+def sacar():
+    global saldo, extrato, QTD_SAQUES, cont_saques, LIMITE_SAQUE
 
     print(
         """
@@ -177,68 +121,60 @@ def take_value():
     )
 
     while True:
-        if count_loot >= NUMBER_LOOT:
+        if cont_saques >= QTD_SAQUES:
             print("\n    Saque não permitido!\n")
             print(
                 """    Você já atingiu sua quantidade
     de saques disponíveis!"""
             )
-            aux_menu()
+            menu_rodape()
             break
 
-        str_value = input("    Valor do saque: R$ ")
+        str_valor = input("    Valor do saque: R$ ")
 
-        value = input_test(str_value)
+        valor = testar_entrada(str_valor)
 
-        if value == 0:
+        if valor == 0:
             print("\n    O valor é inválido!")
             continue
 
         else:
-            #         if count_loot >= NUMBER_LOOT:
+            #         if cont_saques >= QTD_SAQUES:
             #             print("\n    Saque não permitido!\n")
             #             print(
             #                 """    Você já atingiu sua quantidade
             # de saques disponíveis!"""
             #             )
 
-            #             aux_menu()
+            #             menu_rodape()
             #             break
 
-            if account_balance < value:
+            if saldo < valor:
                 print("\n    Saldo insuficiente!\n\n")
-                aux_menu()
+                menu_rodape()
                 break
 
-            elif value > LOOT_LIMIT:
+            elif valor > LIMITE_SAQUE:
                 print("\n    Saque não permitido!\n")
-                print(f"    Seu limite de saque é R${LOOT_LIMIT},00!\n\n")
+                print(f"    Seu limite de saque é R${LIMITE_SAQUE},00!\n\n")
 
             else:
                 NOW = datetime.today()
                 strNOW = NOW.strftime("%d/%m/%y %H:%M")
 
-                account_balance -= value
-                count_loot += 1
-                statement += f"{strNOW}    Saque      - R$ {value:,.2f}\n"
+                saldo -= valor
+                cont_saques += 1
+                extrato += f"{strNOW}    Saque      - R$ {valor:,.2f}\n"
 
                 print("\n    Saque realizado com sucesso!\n\n")
 
-                if not repeat_operation("saque"):
-                    aux_menu()
+                if not repetir_operacao("saque"):
+                    menu_rodape()
                     break
 
 
-#########################################################
-
-
-#########################################################
-#   2 - EXTRATO
-#########################################################
-
-
-def print_statement():
-    global statement, account_balance
+def inprimir_extrato():
+    global extrato, saldo
 
     print(
         """
@@ -247,74 +183,70 @@ def print_statement():
 ------------------------------------------\n"""
     )
 
-    if statement == "":
+    if extrato == "":
         print("\n\n    Não foram realizadas movimentações\n\n")
     else:
-        print(statement)
+        print(extrato)
 
     print(
         f"""
 ------------------------------------------
-Saldo = R$ {account_balance:,.2f}
+Saldo = R$ {saldo:,.2f}
 ------------------------------------------"""
     )
 
-    aux_menu()
+    menu_rodape()
 
 
-#########################################################
-
-
-#########################################################
-#   9 - SAIR DO PROGRAMA
-#########################################################
-
-
-def exit_program():
+def sair_do_programa():
     print(
         """
-------------------------------------------
-------------------------------------------
-        Obrigado! Volte sempre!                  
-------------------------------------------
-------------------------------------------\n\n\n\n"""
+--------------------------------------------
+          Obrigado! Volte sempre!                  
+--------------------------------------------\n\n\n\n"""
     )
     sys.exit()
 
 
-#########################################################
+def main():
+    usuarios = list()
+
+    nome = "Fernanda Pestana"
+    data_de_nascimento = "15/10/1988"
+    cpf = "01174820306"
+    logradouro = "Rua 5 (Und 205)"
+    numero_casa = "50"
+    bairro = "Cidade Operária"
+    cidade = "São Luís"
+    estado = "MA"
+
+    endereco = f"{logradouro}, {numero_casa} - {bairro} - {cidade}/{estado}"
+
+    novo_usuario = {
+        "nome": nome,
+        "data_de_nascimento": data_de_nascimento,
+        "cpf": cpf,
+        "endereco": endereco,
+        "contas": [],
+    }
+
+    nova_conta = {
+        "agencia": "0001",
+        "numero_conta": 1,
+        "cpf_dono": "01174820306",
+        "LIMITE_SAQUE": 500.00,
+        "SAQUES_DISPONIVEIS": 3,
+        "cont_saques": 0,
+        "saldo": 0.0,
+        "extrato": "",
+    }
+
+    nova_conta["saldo"] = 100
+
+    usuarios.append(novo_usuario)
+    usuarios[0]["contas"].append(nova_conta)
+
+    menu_principal(usuarios)
 
 
-#########################################################
-#   INÍCIO DA EXECUÇÃO
-#########################################################
-
-selected_option = -1
-account_balance = 0
-statement = ""
-
-while True:
-    print_main_menu()
-
-    # print(opcao_selecionada)
-    selected_option = input("   Selecione a opção desejada: ")
-
-    if selected_option == "0":
-        deposit_value()
-
-    elif selected_option == "1":
-        take_value()
-
-    elif selected_option == "2":
-        print_statement()
-
-    elif selected_option == "9":
-        exit_program()
-
-    else:
-        print("\n   Opção inválida!")
-
-
-#########################################################
-#   FIM DA EXECUÇÃO
-#########################################################
+main()
