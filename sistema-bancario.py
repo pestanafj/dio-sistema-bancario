@@ -485,29 +485,37 @@ def sacar():
                     break
 
 
-def inprimir_extrato():
-    global extrato, saldo
-
+def imprimir_extrato(usuarios, contas):
     print(
         """
-------------------------------------------
-                  EXTRATO                  
-------------------------------------------\n"""
+--------------------------------------------
+>>> Extrato
+--------------------------------------------"""
     )
 
-    if extrato == "":
-        print("\n\n    Não foram realizadas movimentações\n\n")
+    print("\n    Agência: 0001")
+    conta_corrente = input("    Conta corrente: ")
+
+    index_conta = buscar_conta(contas, "numero_conta", int(conta_corrente))
+
+    if index_conta == -1:
+        print("\n!!! Conta corrente não encontrada!")
+        menu_rodape(usuarios, contas, imprimir_extrato, True)
+
+    if contas[index_conta]["extrato"] == "":
+        print("\n\n!!! Não foram realizadas movimentações\n\n")
     else:
-        print(extrato)
+        print("\n--------------------------------------------\n")
+        print(contas[index_conta]["extrato"])
 
     print(
         f"""
-------------------------------------------
-Saldo = R$ {saldo:,.2f}
-------------------------------------------"""
+--------------------------------------------
+Saldo = R$ {contas[index_conta]['saldo']:,.2f}
+--------------------------------------------"""
     )
 
-    menu_rodape()
+    menu_rodape(usuarios, contas, imprimir_extrato)
 
 
 def sair_do_programa():
