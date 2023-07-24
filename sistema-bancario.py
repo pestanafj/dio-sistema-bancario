@@ -422,69 +422,77 @@ def depositar(usuarios, contas, /, *, cpf_cliente=""):
     return usuarios, contas
 
 
-def sacar():
-    global saldo, extrato, QTD_SAQUES, cont_saques, LIMITE_SAQUE
+def sacar(*saldo, extrato, count_saques, LIMITE_SAQUE, QTD_SAQUES):
+        print(
+            """
+    ------------------------------------------
+                    SAQUE
+    ------------------------------------------\n"""
+        )
 
-    print(
-        """
-------------------------------------------
-                SAQUE                  
-------------------------------------------\n"""
-    )
-
-    while True:
-        if cont_saques >= QTD_SAQUES:
-            print("\n    Saque não permitido!\n")
-            print(
-                """    Você já atingiu sua quantidade
-    de saques disponíveis!"""
-            )
-            menu_rodape()
-            break
-
-        str_valor = input("    Valor do saque: R$ ")
-
-        valor = testar_entrada(str_valor)
-
-        if valor == 0:
-            print("\n    O valor é inválido!")
-            continue
-
-        else:
-            #         if cont_saques >= QTD_SAQUES:
-            #             print("\n    Saque não permitido!\n")
-            #             print(
-            #                 """    Você já atingiu sua quantidade
-            # de saques disponíveis!"""
-            #             )
-
-            #             menu_rodape()
-            #             break
-
-            if saldo < valor:
-                print("\n    Saldo insuficiente!\n\n")
+        while True:
+            if count_saques >= QTD_SAQUES:
+                print("\n!!! Saque não permitido!\n")
+                print(
+                    """!!! Você já atingiu sua quantidade
+        de saques disponíveis!"""
+                )
                 menu_rodape()
                 break
 
-            elif valor > LIMITE_SAQUE:
-                print("\n    Saque não permitido!\n")
-                print(f"    Seu limite de saque é R${LIMITE_SAQUE},00!\n\n")
+            str_valor = input("    Valor do saque: R$ ")
+
+            valor = testar_entrada(str_valor)
+
+            if valor == 0:
+                print("\n    O valor é inválido!")
+                continue
 
             else:
-                NOW = datetime.today()
-                strNOW = NOW.strftime("%d/%m/%y %H:%M")
+                #         if count_loot >= NUMBER_LOOT:
+                #             print("\n    Saque não permitido!\n")
+                #             print(
+                #                 """    Você já atingiu sua quantidade
+                # de saques disponíveis!"""
+                #             )
 
-                saldo -= valor
-                cont_saques += 1
-                extrato += f"{strNOW}    Saque      - R$ {valor:,.2f}\n"
+                #             aux_menu()
+                #             break
 
-                print("\n    Saque realizado com sucesso!\n\n")
-
-                if not repetir_operacao("saque"):
+                if saldo < valor:
+                    print("\n    Saldo insuficiente!\n\n")
                     menu_rodape()
                     break
 
+                elif valor > LIMITE_SAQUE:
+                    print("\n!!! Saque não permitido!\n")
+                    print(f"!!! Seu limite de saque é R${LIMITE_SAQUE},00!\n\n")
 
+                else:
+                    NOW = datetime.today()
+                    strNOW = NOW.strftime("%d/%m/%y %H:%M")
+
+                    saldo -= valor
+                    count_saques += 1
+                    extrato += f"{strNOW}    Saque      - R$ {valor:,.2f}\n"
+
+                    print("\n>>> Saque realizado com sucesso!\n\n")
+
+                    if not repetir_operacao("saque"):
+                        menu_rodape()
+                        break
+
+        return saldo, extrato, count_saques
+
+    if conta_encontrada["cont_saques"] >= conta_encontrada["SAQUES_DISPONIVEIS"]:
+        print("\n!!! Você atingiu a quantidade de saques diários disponíveis!")
+        menu_rodape(usuarios, contas, depositar)
+
+    if valor > conta_encontrada["LIMITE_SAQUE"]:
+        print(
+            f"\n!!! Seu limite de saque é de R$ {conta_encontrada['LIMITE_SAQUE']:.2f}!"
+        )
+        depositar(usuarios, contas, cpf_cliente)
 def imprimir_extrato(usuarios, contas):
     print(
         """
