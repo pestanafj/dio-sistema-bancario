@@ -234,7 +234,7 @@ def atendimento_sem_cadastro(clientes, contas, fluxo, index_cliente=-1):
         print("\n>>> Imprimir extrato\n")
         imprimir_extrato(clientes, contas, fluxo, -1)
     elif opcaoSelecionada == "0":
-        menu_principal(clientes, contas, fluxo, -1)
+        menu_principal(clientes, contas, f1212luxo, -1)
     elif opcaoSelecionada == "9":
         sair_do_programa()
     else:
