@@ -17,10 +17,10 @@ def menu_principal(clientes, contas, fluxo, index_cliente):
                 PESTANA BANK
 --------------------------------------------
 
-[1] - Já sou cliente
-[2] - Desejo ser cliente
-[3] - Atendimento sem cadastro
-[9] - Finalizar atendimento
+[1]  Já sou cliente
+[2]  Desejo ser cliente
+[3]  Atendimento sem cadastro
+[9]  Finalizar atendimento
 
 --------------------------------------------
     """
@@ -70,20 +70,20 @@ def menu_principal(clientes, contas, fluxo, index_cliente):
         input("\n!!! Opção Inválida.\nPressione enter para continuar...\n")
         menu_principal(clientes, contas, fluxo, -1)
 
-    return clientes, contas
+    return clientes, contas, fluxo
 
 
 def menu_rodape(clientes, contas, fluxo, index_cliente=-1):
     str_menu_anterior = ""
     if len(fluxo) > 1:
-        str_menu_anterior = "\n[-] - Menu anterior\n"
+        str_menu_anterior = "\n[-]  Menu anterior\n"
 
     print(
         f"""
 \n------------------------------------------
-[+] - Fazer outra operação{str_menu_anterior}
-[0] - Voltar ao Início
-[9] - Sair\n
+[+]  Fazer outra operação{str_menu_anterior}
+[0]  Voltar ao Início
+[9]  Sair\n
 ------------------------------------------\n"""
     )
 
@@ -97,17 +97,34 @@ def menu_rodape(clientes, contas, fluxo, index_cliente=-1):
 
     elif opcao_selecionada == "+":
         menu_de_chamada = fluxo.pop()
-        menu_de_chamada(clientes, contas, fluxo, index_cliente=index_cliente)
+        if menu_de_chamada == sacar_cliente:
+            menu_de_chamada(
+                clientes=clientes,
+                contas=contas,
+                fluxo=fluxo,
+                index_cliente=index_cliente,
+            )
+        else:
+            menu_de_chamada(clientes, contas, fluxo, index_cliente=index_cliente)
 
     elif len(fluxo) > 1 and opcao_selecionada == "-":
         fluxo.pop()
         menu_de_chamada = fluxo.pop()
-        menu_de_chamada(clientes, contas, fluxo, index_cliente)
+        if menu_de_chamada == sacar_cliente:
+            menu_de_chamada(
+                clientes=clientes,
+                contas=contas,
+                fluxo=fluxo,
+                index_cliente=index_cliente,
+            )
+        else:
+            menu_de_chamada(clientes, contas, fluxo, index_cliente=index_cliente)
 
     else:
         print("\n!!! Opção inválida!")
         menu_rodape(clientes, contas, fluxo, index_cliente)
-    return clientes, contas
+
+    return clientes, contas, fluxo
 
 
 def atendimento_cliente(clientes, contas, fluxo, index_cliente=-1):
@@ -130,13 +147,13 @@ def atendimento_cliente(clientes, contas, fluxo, index_cliente=-1):
     print(
         """
 
-[1] - Criar Conta
-[2] - Listar Contas
-[3] - Depósito
-[4] - Saque
-[5] - Extrato
-[0] - Voltar ao Menu Principal
-[9] - Finalizar atendimento
+[1]  Criar Conta
+[2]  Listar Contas
+[3]  Depósito
+[4]  Saque
+[5]  Extrato
+[0]  Voltar ao Menu Principal
+[9]  Finalizar atendimento
 
 --------------------------------------------
 """
@@ -157,7 +174,10 @@ def atendimento_cliente(clientes, contas, fluxo, index_cliente=-1):
         depositar_cliente(clientes, contas, fluxo, index_cliente=index_cliente)
 
     elif opcaoSelecionada == "4":
-        print("\n>>> Saque\n")
+        # print("\n>>> Saque\n")
+        sacar_cliente(
+            clientes=clientes, contas=contas, fluxo=fluxo, index_cliente=index_cliente
+        )
 
     elif opcaoSelecionada == "5":
         # print("\n>>> Imprimir extrato\n")
@@ -173,7 +193,7 @@ def atendimento_cliente(clientes, contas, fluxo, index_cliente=-1):
         input("\n!!! Opção Inválida.\nPressione enter para continuar...\n")
         atendimento_cliente(clientes, contas, fluxo, index_cliente=index_cliente)
 
-    menu_rodape(clientes, contas, fluxo, index_cliente)
+    return menu_rodape(clientes, contas, fluxo, index_cliente)
 
 
 def atendimento_sem_cadastro(clientes, contas, fluxo, index_cliente=-1):
@@ -186,12 +206,12 @@ def atendimento_sem_cadastro(clientes, contas, fluxo, index_cliente=-1):
   PESTANA BANK - ATENDIMENTO SEM CADASTRO           
 --------------------------------------------
 
-[1] - Listar Clientes
-[2] - Listar Contas
-[3] - Depósito
-[4] - Extrato
-[0] - Voltar ao Menu Principal
-[9] - Finalizar o Atendimento
+[1]  Listar Clientes
+[2]  Listar Contas
+[3]  Depósito
+[5]  Extrato
+[0]  Voltar ao Menu Principal
+[9]  Finalizar o Atendimento
 
 --------------------------------------------
 """
@@ -210,7 +230,7 @@ def atendimento_sem_cadastro(clientes, contas, fluxo, index_cliente=-1):
     elif opcaoSelecionada == "3":
         print("\n>>> Depositar!\n")
         depositar(clientes, contas, fluxo, index_cliente=-1)
-    elif opcaoSelecionada == "4":
+    elif opcaoSelecionada == "5":
         print("\n>>> Imprimir extrato\n")
         imprimir_extrato(clientes, contas, fluxo, -1)
     elif opcaoSelecionada == "0":
@@ -221,7 +241,7 @@ def atendimento_sem_cadastro(clientes, contas, fluxo, index_cliente=-1):
         input("\n!!! Opção Inválida.\nPressione enter para continuar...\n")
         atendimento_sem_cadastro(clientes, contas, fluxo, -1)
 
-    menu_rodape(clientes, contas, fluxo, -1)
+    return menu_rodape(clientes, contas, fluxo, index_cliente)
 
 
 def cadastrar_cliente(clientes, contas, fluxo, index_cliente):
@@ -268,9 +288,7 @@ def cadastrar_cliente(clientes, contas, fluxo, index_cliente):
     print("\n\n>>> Cliente cadastrado!")
 
     fluxo.pop()
-    menu_rodape(clientes, contas, fluxo, -1)
-
-    return clientes, contas
+    return menu_rodape(clientes, contas, fluxo, -1)
 
 
 def teste_cadastro(campo):
@@ -278,7 +296,7 @@ def teste_cadastro(campo):
 
     if (entrada_campo == "") or (campo == "Estado(XX)" and len(entrada_campo) != 2):
         print(f"\n!!! Erro!\n!!! {campo} possui valor inválido!\n")
-        teste_cadastro(campo)
+        return teste_cadastro(campo)
     elif campo == "CPF":
         cpf_tratado = ""
         for digito in entrada_campo:
@@ -287,7 +305,7 @@ def teste_cadastro(campo):
 
         if len(cpf_tratado) != 11:
             print("\n!!! Erro!\n!!! CPF inválido!\n")
-            teste_cadastro(campo)
+            return teste_cadastro(campo)
 
         return cpf_tratado
 
@@ -371,6 +389,8 @@ def criar_conta_corrente(clientes, contas, fluxo, index_cliente):
         fluxo.pop()
         criar_conta_corrente(clientes, contas, fluxo, index_cliente)
 
+    return menu_rodape(clientes, contas, fluxo, index_cliente)
+
 
 def listar_clientes(clientes, contas, fluxo, index_cliente=-1):
     fluxo.append(listar_clientes)
@@ -384,7 +404,7 @@ def listar_clientes(clientes, contas, fluxo, index_cliente=-1):
             # print(conta)
             imprimir_cliente(cliente)
 
-    menu_rodape(clientes, contas, fluxo, -1)
+    return menu_rodape(clientes, contas, fluxo, -1)
 
 
 def imprimir_cliente(cliente):
@@ -406,7 +426,7 @@ def listar_contas(clientes, contas, fluxo, index_cliente=-1):
             # print(conta)
             imprimir_conta(conta)
 
-    menu_rodape(clientes, contas, fluxo, index_cliente)
+    return menu_rodape(clientes, contas, fluxo, index_cliente)
 
 
 def imprimir_conta(conta):
@@ -466,9 +486,7 @@ def depositar(clientes, contas, /, fluxo, index_cliente):
 
     print("\n>>> Depósito realizado com sucesso!\n")
 
-    menu_rodape(clientes, contas, fluxo, -1)
-
-    return clientes, contas
+    return menu_rodape(clientes, contas, fluxo, -1)
 
 
 def depositar_cliente(clientes, contas, /, fluxo, *, index_cliente=-1):
@@ -517,83 +535,130 @@ def depositar_cliente(clientes, contas, /, fluxo, *, index_cliente=-1):
 
         print("\n>>> Depósito realizado com sucesso!\n")
 
-    menu_rodape(clientes, contas, fluxo, index_cliente)
-    return clientes, contas
+    return menu_rodape(clientes, contas, fluxo, index_cliente)
 
 
-def sacar(*saldo, extrato, count_saques, LIMITE_SAQUE, QTD_SAQUES, fluxo):
+def sacar(*clientes, contas, fluxo, index_cliente=-1):
     fluxo.append(sacar)
     print(
         """
-    ------------------------------------------
-                    SAQUE
-    ------------------------------------------\n"""
+--------------------------------------------
+>>> Saque
+--------------------------------------------"""
     )
 
-    while True:
-        if count_saques >= QTD_SAQUES:
-            print("\n!!! Saque não permitido!\n")
-            print(
-                """!!! Você já atingiu sua quantidade
-        de saques disponíveis!"""
-            )
-            menu_rodape(clientes, contas, fluxo)
-            break
+    print("\n    Agência: 0001")
+    conta_corrente = input("    Conta corrente: ")
 
-        str_valor = input("    Valor do saque: R$ ")
+    if not conta_corrente.isdigit():
+        print("\n!!! Conta corrente inválida!")
+        menu_rodape(clientes, contas, fluxo, -1)
 
-        valor = testar_entrada(str_valor)
+    index_conta = retorna_index_conta(contas, int(conta_corrente))
 
-        if valor == 0:
-            print("\n    O valor é inválido!")
-            continue
+    if index_conta == -1:
+        print("\n!!! Conta corrente não encontrada!")
+        menu_rodape(clientes, contas, fluxo, -1)
 
-        else:
-            #         if count_loot >= NUMBER_LOOT:
-            #             print("\n    Saque não permitido!\n")
-            #             print(
-            #                 """    Você já atingiu sua quantidade
-            # de saques disponíveis!"""
-            #             )
+    if contas[index_conta]["cont_saques"] >= contas[index_conta]["SAQUES_DISPONIVEIS"]:
+        print("\n!!! Saque não permitido!\n")
+        print(
+            """!!! Você já atingiu sua quantidade
+    de saques disponíveis!"""
+        )
+        menu_rodape(clientes, contas, fluxo, -1)
 
-            #             aux_menu()
-            #             break
+    # print("\n    - formato R$ 00.00")
 
-            if saldo < valor:
-                print("\n    Saldo insuficiente!\n\n")
-                menu_rodape(clientes, contas, fluxo)
-                break
+    valor = testar_entrada("\n    Valor do saque: R$ ")
 
-            elif valor > LIMITE_SAQUE:
-                print("\n!!! Saque não permitido!\n")
-                print(f"!!! Seu limite de saque é R${LIMITE_SAQUE},00!\n\n")
+    if contas[index_conta]["saldo"] < valor:
+        print("\n    Saldo insuficiente!\n\n")
+        menu_rodape(clientes, contas, fluxo, -1)
 
-            else:
-                NOW = datetime.today()
-                strNOW = NOW.strftime("%d/%m/%y %H:%M")
+    elif valor > contas[index_conta]["LIMITE_SAQUE"]:
+        print("\n!!! Saque não permitido!\n")
+        print(
+            f"!!! Seu limite de saque é R${contas[index_conta]['LIMITE_SAQUE']:.2f}!\n\n"
+        )
+        menu_rodape(clientes, contas, fluxo, -1)
 
-                saldo -= valor
-                count_saques += 1
-                extrato += f"{strNOW}    Saque      - R$ {valor:,.2f}\n"
+    NOW = datetime.today()
+    strNOW = NOW.strftime("%d/%m/%y %H:%M")
 
-                print("\n>>> Saque realizado com sucesso!\n\n")
+    saldo -= valor
+    cont_saques += 1
+    extrato += f"{strNOW}    Saque      - R$ {valor:,.2f}\n"
 
-                # if not repetir_operacao("saque"):
-                #     menu_rodape()
-                #     break
+    print("\n>>> Saque realizado com sucesso!\n\n")
 
-    return saldo, extrato, count_saques
+    return menu_rodape(clientes, contas, fluxo, -1)
 
 
-# if conta_encontrada["cont_saques"] >= conta_encontrada["SAQUES_DISPONIVEIS"]:
-#     print("\n!!! Você atingiu a quantidade de saques diários disponíveis!")
-#     menu_rodape(usuarios, contas, depositar)
+def sacar_cliente(*, clientes, contas, fluxo, index_cliente=-1):
+    fluxo.append(sacar_cliente)
+    print(
+        """
+--------------------------------------------
+>>> Saque Cliente
+--------------------------------------------"""
+    )
+    contas_cliente = buscar_lista_contas_por_cpf(contas, clientes[index_cliente]["cpf"])
 
-# if valor > conta_encontrada["LIMITE_SAQUE"]:
-#     print(
-#         f"\n!!! Seu limite de saque é de R$ {conta_encontrada['LIMITE_SAQUE']:.2f}!"
-#     )
-#     depositar(usuarios, contas, cpf_cliente)
+    if len(contas_cliente) <= 0:
+        print("\n!!! Nenhuma conta corrente encontrada!")
+        menu_rodape(clientes, contas, fluxo, index_cliente)
+
+    for index in contas_cliente:
+        print(
+            f"""
+\n[{index}] - Agência: {contas[index]['agencia']}
+      Conta: {'%04d'%contas[index]['numero_conta']}"""
+        )
+
+    opcao = input("\nSelecione a conta em que \ndeseja realizar o saque: ")
+
+    if not opcao.isdigit():
+        print("\n!!! Opção Inválida!")
+        menu_rodape(clientes, contas, fluxo, index_cliente)
+
+    id_conta = int(opcao)
+
+    if not id_conta in contas_cliente:
+        print("\n!!! Opção Inválida!")
+        menu_rodape(clientes, contas, fluxo, index_cliente)
+
+    if contas[id_conta]["cont_saques"] >= contas[id_conta]["SAQUES_DISPONIVEIS"]:
+        print("\n!!! Saque não permitido!\n")
+        print(
+            """!!! Você já atingiu sua quantidade
+    de saques disponíveis!"""
+        )
+        menu_rodape(clientes, contas, fluxo, index_cliente)
+
+    # print("\n    - formato R$ 00.00")
+
+    valor = testar_entrada("\n    Valor do depósito: R$ ")
+
+    if contas[id_conta]["saldo"] < valor:
+        print("\n    Saldo insuficiente!\n\n")
+        menu_rodape(clientes, contas, fluxo, index_cliente)
+
+    elif valor > contas[id_conta]["LIMITE_SAQUE"]:
+        print("\n!!! Saque não permitido!\n")
+        print(f"!!! Seu limite de saque é R${contas[id_conta]['LIMITE_SAQUE']},00!\n\n")
+        menu_rodape(clientes, contas, fluxo, index_cliente)
+
+    NOW = datetime.today()
+    strNOW = NOW.strftime("%d/%m/%y %H:%M")
+
+    contas[id_conta]["saldo"] -= valor
+    contas[id_conta]["cont_saques"] += 1
+    contas[id_conta]["extrato"] += f"{strNOW}    Saque      - R$ {valor:,.2f}\n"
+
+    print("\n>>> Saque realizado com sucesso!\n\n")
+
+    return menu_rodape(clientes, contas, fluxo, index_cliente)
 
 
 def imprimir_extrato(clientes, contas, fluxo, index_cliente):
@@ -607,7 +672,11 @@ def imprimir_extrato(clientes, contas, fluxo, index_cliente):
     )
 
     print("\n    Agência: 0001")
-    conta_corrente = int(input("    Conta corrente: "))
+    conta_corrente = input("    Conta corrente: ")
+
+    if not conta_corrente.isdigit():
+        print("\n!!! Conta Inválida!")
+        menu_rodape(clientes, contas, fluxo, index_cliente)
 
     index_conta = buscar_conta(contas, "numero_conta", int(conta_corrente))
 
