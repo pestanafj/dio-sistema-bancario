@@ -1,36 +1,54 @@
 
-# SISTEMA BANCÁRIO COM PYTHON
+# 💵 PESTANA BANK 💵
+
+<img align="center" alt="Python" height="250" width="300" src="https://gifs.eco.br/wp-content/uploads/2022/06/gifs-de-dinheiro-17.gif" />
 
 
-## DESCRIÇÃO
-
-Neste projeto, você terá a oportunidade de criar um Sistema Bancário em Python.
-
-O objetivo é implementar três operações essenciais: depósito, saque e extrato.
-
-O sistema será desenvolvido para um banco que busca monetizar suas operações.
-
-Durante o desafio, você terá a chance de aplicar seus conhecimentos em programação Python e criar um sistema funcional que simule as operações bancárias.
-
-Prepare-se para aprimorar suas habilidades e demonstrar sua capacidade de desenvolver soluções práticas e eficientes.
-
-## OBJETIVO GERAL
-
-Criar um sistema bancário com as operações
-- Depositar
-- Sacar
-- Visualizar extrato
-
-## DESAFIO
-
-Fomos contratados por um grande banco para desenvolver o seu novo sistema.
-
-Esse banco deseja modernizar suas operações e por isso escolheu a linguagem Python.
-
-Para a primeira versão do sistema devemos implementar apenas três operações: depósito, saque e extrato.
 
 
-### Operação de Depósito
+### 🖥️ DESCRIÇÃO
+
+Simples Sistema Bancário em Python, baseado em Terminal.
+
+<img align="center" alt="Python" height="50" width="50" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" />
+
+
+### 🔧 FUNCIONALIDADES
+
+- Cadastro de cliente
+- Criação de Conta Bancária
+- Depósito em Conta
+- Saque de Conta
+- Extrato da Conta
+- Listar Clientes
+- Listar Contas
+
+### 🪟 MENUS
+
+
+
+#### 📌 MENU PRINCIPAL
+
+<img align="center" alt="Menu_principal"  width="250" src="./img/menu-principal.png "/>
+
+#### 📌 1 - ATENDIMENTO CLIENTE
+<img align="center" alt="Menu_principal"  width="250" src="./img/menu-atendimento-cliente.png"/>
+
+#### 📌 2 - CADASTRO DE CLIENTE
+<img align="center" alt="Menu_principal"  width="250" src="./img/cadastro-cliente.png"/>
+
+#### 📌 3 - ATENDIMENTO SEM CADASTRO
+<img align="center" alt="Menu_principal"  width="250" src="./img/menu-atendimento-sem-cadastro.png "/>
+
+
+
+### TRANSAÇÕES
+
+#### DEPÓSITO
+
+#### SAQUE
+
+#### EXTRATO
 
 Deve ser possível depositar valores positivos para a minha conta bancária.
 

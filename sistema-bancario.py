@@ -774,7 +774,7 @@ def main():
 
     nome = "Fernanda Pestana"
     data_de_nascimento = "15/10/1988"
-    cpf = "01174820306"
+    cpf = "11111111111"
     logradouro = "Rua 5 (Und 205)"
     numero_casa = "50"
     bairro = "Cidade Operária"
@@ -793,7 +793,7 @@ def main():
     nova_conta = {
         "agencia": "0001",
         "numero_conta": 1,
-        "cpf_dono": "01174820306",
+        "cpf_dono": "11111111111",
         "LIMITE_SAQUE": 500.00,
         "SAQUES_DISPONIVEIS": 3,
         "cont_saques": 0,
