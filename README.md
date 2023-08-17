@@ -12,6 +12,7 @@ Simples Sistema Bancário em Python, baseado em Terminal.
 <br><br>
 Versão : 2.0.0
 <br><br>
+
 ### 🛠️ FERRAMENTAS
 <br>
 Neste projeto foram utilizadas as seguintes ferramentas:
@@ -25,11 +26,14 @@ Neste projeto foram utilizadas as seguintes ferramentas:
 ### ✅ PRÉ-REQUISITOS
 <br>
 Para rodar o aplicativo, é necessário possuir instaladas em sua máquinas as seguintes ferramentas:
+<br><br>
 
 | Python |   Git    |
 |:--------:|:--------:|
 | <img height="50" width="50" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg"/> | <img height="50" width="50" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg"/>
-<br><br>
+
+<br>
+
 ### 🚀 RODANDO APLICATIVO
 <br>
 Abra um terminal na pasta onde deseja salvar o aplicativo.
@@ -51,6 +55,7 @@ python sistema-bancario.py
 <br><br>
 ### 🔧 FUNCIONALIDADES
 <br>
+
 - [x] Cadastro de cliente
 - [x] Criação de Conta Bancária
 - [x] Depósito em Conta
@@ -63,7 +68,7 @@ python sistema-bancario.py
 <br><br>
 
 ### 🪟 MENUS
-
+<br>
 
 #### 📌 MENU PRINCIPAL
 <br>
@@ -76,11 +81,12 @@ python sistema-bancario.py
 | [1] - CLIENTE |   [3] - SEM CADASTRO    |
 |:--------:|:--------:|
 | <img align="TOP" src="./img/menu-atendimento-cliente.png"/> | <img align="TOP" src="./img/menu-atendimento-sem-cadastro.png"/>
+
 <br><br>
 
 
 ### 💸 CADASTRO E CRIAÇÃO DE CONTA
-
+<br>
 
 #### 📌 1 - CADASTRO DE CLIENTE
 
@@ -186,14 +192,14 @@ Os valores serão  exibidos utilizando o formato "R$ xx.xx"
 <br>
 
 #### 📌 LISTAR CLIENTES
-
+<br>
 A listagem de clientes é acessada através do Menu [3] - ATENDIMENTO SEM CADASTRO, opção [1] - Listar Clientes.
 
 <img align="center" alt="Listar_cliente"  width="250" src="./img/listar-clientes.png "/>
 <br><br>
 
 #### 📌 LISTAR CONTAS
-
+<br>
 A listagem de contas é acessada através do Menu [3] - ATENDIMENTO SEM CADASTRO, opção [2] - Listar Contas.
 
 <img align="center" alt="Listar_contas"  width="250" src="./img/listar-contas.png "/>
@@ -202,7 +208,9 @@ A listagem de contas é acessada através do Menu [3] - ATENDIMENTO SEM CADASTRO
 <br><br>
 
 ### 👩🏻‍💻 AUTOR
-
+<br>
 Fernanda Pestana [pestanafj]
 
 Projeto criado durante Bootcamp DIO - Potencia Tech powered by Ifood - Ciência de Dados em Python.
+
+Julho 2023.
